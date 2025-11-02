@@ -6,21 +6,27 @@ pipeline {
             steps { checkout scm }
         }
         stage('Build') {
-            steps { bat 'mvn -B clean package' }
+            steps {
+                dir('my-app') {   // 👈 go into subfolder
+                    bat 'mvn -B clean package'
+                }
+            }
         }
         stage('Test') {
             steps {
-                bat 'mvn test'
+                dir('my-app') {
+                    bat 'mvn test'
+                }
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/*.xml'
+                    junit 'my-app/target/surefire-reports/*.xml'
                 }
             }
         }
         stage('Archive') {
             steps {
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+                archiveArtifacts artifacts: 'my-app/target/*.jar', fingerprint: true
             }
         }
     }
