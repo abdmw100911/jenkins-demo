@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    tools { maven 'Maven3' }
+    tools { maven 'Maven-3.9' }
     stages {
         stage('Checkout') {
             steps { checkout scm }
